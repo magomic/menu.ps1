@@ -1,6 +1,7 @@
-# DrawMenu ist - quasi - eine Unterfunktion von Menu() Rückgabewert von Menu() kann auch $pos sein
+# DrawMenu ist - quasi - eine Unterfunktion von Menu() RÃ¼ckgabewert von Menu() kann auch $pos sein
 # Quelle: http://mspowershell.blogspot.de/2009/02/cli-menu-in-powershell.html
 # github: https://github.com/magomic/menu.ps1
+# verifiziertes repository
 
 n DrawMenu {
     ## supportfunction to the Menu function below
