@@ -52,10 +52,13 @@ namespace toolslist
 
 function DrawMenu {
     ## supportfunction to the Menu function below
-    param ($menuItems, $menuPosition, $menuTitel)
+    param ([toolslist.MainList]$menuItems, $menuPosition, $menuTitel)
     $fcolor = $host.UI.RawUI.ForegroundColor
     $bcolor = $host.UI.RawUI.BackgroundColor
-    $l = [int32]$menuItems.arr.length + 1
+    write-host "Position: $menuPosition"
+    #$host.ui.rawui.readkey()
+
+    $l = $menuItems.getcount -1
     cls
     $menuwidth = $menuTitel.length + 4
     Write-Host "`t" -NoNewLine
@@ -65,15 +68,15 @@ function DrawMenu {
     Write-Host "`t" -NoNewLine
     Write-Host ("*" * $menuwidth) -fore $fcolor -back $bcolor
     Write-Host ""
-    Write-debug "L: $l MenuItems: $menuItems MenuPosition: $menuposition"
-    write-host "i: $i; l: $l"
-    $Host.ui.rawui.readkey()
+    Write-host "L: $l MenuItems: $menuItems.arr MenuPosition: $menuposition"
+    # write-host "i: $i; l: $l"
+    # $Host.ui.rawui.readkey()
     for ($i = 0; $i -le $l;$i++) {
         Write-Host "`t" -NoNewLine
         if ($i -eq $menuPosition) {
-            Write-Host "$([toolslist.element]$menuItems.getelement($i)._desc)" -fore $bcolor -back $fcolor
+            Write-Host ([toolslist.element]$menuItems.getelement($i))._desc -fore $bcolor -back $fcolor
         } else {
-            Write-Host "$([toolslist.element]$menuItems.getelement($i)._desc)" -fore $fcolor -back $bcolor
+            Write-Host ([toolslist.element]$menuItems.getelement($i))._desc -fore $fcolor -back $bcolor
         }
     }
 }
@@ -89,10 +92,10 @@ function Menu {
         $press = $host.ui.rawui.readkey("NoEcho,IncludeKeyDown")
         $vkeycode = $press.virtualkeycode
         Write-host "$($press.character)" -NoNewLine
-        If ($vkeycode -eq 38) {if($pos -eq 0){$pos=$menuItems.Arr.Length-1}else{$pos--} }
-        If ($vkeycode -eq 40) {if($pos -eq $menuItems.Arr.Length-1){$pos=0}else{ $pos++} }
+        If ($vkeycode -eq 38) {if($pos -eq 0){$pos=$menuItems.getcount-1}else{$pos--} } #up
+        If ($vkeycode -eq 40) {if($pos -eq $menuItems.getcount-1){$pos=0}else{$pos++} } #down
         if ($pos -lt 0) {$pos = 0}
-        if ($pos -ge $menuItems.arr.length) {$pos = $menuItems.arr.length -1}
+        if ($pos -ge $menuItems.getcount-1) {$pos = $menuItems.getcount -1}
         DrawMenu $menuItems $pos $menuTitel
     }
     # Write-Output $($menuItems[$pos])
@@ -130,7 +133,7 @@ while ($true)
 	$list.addtool("<-- back","return")
 	
 
-	$tools = "taskmgr (Taskmanager)", "appwiz.cpl (Programs)", "mmsys.cpl (Device.Sounds)", "odbcad32 (DB-ConnectionStrings)", "cmd /c control printers (Drucker)","resmon (RessourcenMonitor)", "mlcfg32.cpl (Email32)","sysdm.cpl (Erw. Systemeig./Benutzerprofile)", "eventvwr.msc (Win.logs)", "msconfig (Win.StartOptionen)" ,"cmd /c control admintools (Verwaltung)" , "mstsc (Remote Desktop)", "desk.cpl (Display)", "regedit (Registry)", "net use (Netzlaufwerke)", "Server Pingen (ODBC-Dateien auslesen und Server pingen, z.b. ls.disp,..)", "Anzahl Profile", "pst-Dateien finden und einbinden", "DeinstallationsMenü","<-- back"
+	#$tools = "taskmgr (Taskmanager)", "appwiz.cpl (Programs)", "mmsys.cpl (Device.Sounds)", "odbcad32 (DB-ConnectionStrings)", "cmd /c control printers (Drucker)","resmon (RessourcenMonitor)", "mlcfg32.cpl (Email32)","sysdm.cpl (Erw. Systemeig./Benutzerprofile)", "eventvwr.msc (Win.logs)", "msconfig (Win.StartOptionen)" ,"cmd /c control admintools (Verwaltung)" , "mstsc (Remote Desktop)", "desk.cpl (Display)", "regedit (Registry)", "net use (Netzlaufwerke)", "Server Pingen (ODBC-Dateien auslesen und Server pingen, z.b. ls.disp,..)", "Anzahl Profile", "pst-Dateien finden und einbinden", "DeinstallationsMenü","<-- back"
 # gibt es einen fraport internen nslookup für ip's von nbr's? vpn-server o.ä.?
 #
 	$a = Menu $list "Windows Tools"
